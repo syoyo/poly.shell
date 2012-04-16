@@ -1,4 +1,3 @@
-stdio = process.binding('stdio')
 EventEmitter = require('events').EventEmitter
 util = require './util'
 
@@ -9,8 +8,8 @@ readSilentLine = (cb = ->) ->
       if err == 'SIGINT'
         process.kill process.pid, 'SIGINT'
     
-  stdin = process.openStdin()
-  stdio.setRawMode(true)
+  stdin = process.stdin
+  #stdio.setRawMode(true)
   line = ""
   stdin.resume()
   stdin.on("error", cb)
@@ -23,7 +22,7 @@ readSilentLine = (cb = ->) ->
       line += data.slice(0, pos)
       stdin.removeListener("data", arguments.callee)
       stdin.removeListener("error", cb)      
-      stdio.setRawMode(false)
+      #stdio.setRawMode(false)
       stdin.pause()
       cb null, line
     else if /\u0003/.test data
